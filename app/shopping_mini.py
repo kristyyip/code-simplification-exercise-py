@@ -2,6 +2,27 @@
 from datetime import datetime
 import os
 
+# GOAL 1: simplify USD formatting
+# GOAL 2: simplify receipt printing / file writing
+
+
+selected_products = [
+]
+
+def to_usd(my_price):
+    """
+    Converts a numeric value to usd-formatted string, for printing and display purposes.
+    
+    Source: https://github.com/prof-rossetti/intro-to-python/blog/master/notes/python/datatypes/numbers.
+    
+    Param: my_price (int or float) like 4000.444444
+    
+    Example: to_usd(4000.444444)
+    
+    Returns: $4,000.44
+    """
+    return f"${my_price:,.2f}" #> $12,000.71
+    
 checkout_at = datetime.now().strftime("%M/%d/%Y %I:%m %p")
 
 selected_products = [
@@ -18,18 +39,19 @@ subtotal = sum([p["price"] for p in selected_products])
 
 # PRINT RECEIPT
 
-print("---------")
-print("CHECKOUT AT: " + str(now.strftime("%Y-%M-%d %H:%m:%S")))
-print("---------")
+receipt = ""
+receipt += "n---------"
+receipt += "CHECKOUT AT: " + str(now.strftime("%Y-%M-%d %H:%m:%S"))
+receipt += "---------"
 for p in selected_products:
-    print("SELECTED PRODUCT: " + p["name"] + "   " + '${:.0f}'.format(p["price"]))
-print("---------")
-print(f"SUBTOTAL: {subtotal:,.2f}")
-print(f"TAX: {(subtotal * 0.0875):.2f}")
-print(f"TOTAL: {((subtotal * 0.0875) + subtotal):.2f}")
-print("---------")
-print("THANK YOU! PLEASE COME AGAIN SOON!")
-print("---------")
+    receipt += "SELECTED PRODUCT: " + p["name"] + "   " + to_usd(p["price"]
+receipt += "---------"
+receipt += f"SUBTOTAL: {to_usd(subtotal)}"
+receipt += f"TAX: {to_usd(subtotal * 0.0875)}"
+receipt += f"TOTAL: {to_usd(subtotal * 0.0875) + subtotal)}"
+receipt += "---------"
+receipt += "THANK YOU! PLEASE COME AGAIN SOON!"
+receipt += "---------"
 
 # WRITE RECEIPT TO FILE
 
@@ -37,12 +59,12 @@ file_name = os.path.join(os.path.dirname(__file__), "..", "receipts", f"{now.str
 with open(file_name, 'w') as f:
     f.write("------------------------------------------")
     for p in selected_products:
-        f.write("\nSELECTED PRODUCT: " + p["name"] + "   " + '${:.0f}'.format(p["price"]))
+        f.write("\nSELECTED PRODUCT: " + p["name"] + "   " + to_usd(p["price"]))
 
     f.write("---------")
-    f.write(f"SUBTOTAL: {subtotal:,.2f}")
-    f.write(f"TAX: {(subtotal * 0.1):.2f}")
-    f.write(f"TOTAL: {((subtotal * 0.1) + subtotal):.2f}")
+    f.write(f"SUBTOTAL: {to_usd(subtotal)}")
+    f.write(f"TAX: {to_usd(subtotal * 0.1)")
+    f.write(f"TOTAL: {to_usd((subtotal * 0.1) + subtotal)")
     f.write("---------")
     f.write("THANK YOU! PLEASE COME AGAIN SOON!")
     f.write("---------")
