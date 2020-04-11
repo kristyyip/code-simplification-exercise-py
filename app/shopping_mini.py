@@ -1,9 +1,9 @@
-
 from datetime import datetime
 import os
 
 # GOAL 1: simplify USD formatting
-# GOAL 2: simplify receipt printing / file writing
+# GOAL 2: simplify the tax rate
+# GOAL 3: simplify receipt printing / file writing
 
 
 selected_products = [
@@ -40,33 +40,28 @@ subtotal = sum([p["price"] for p in selected_products])
 # PRINT RECEIPT
 
 receipt = ""
-receipt += "n---------"
-receipt += "CHECKOUT AT: " + str(now.strftime("%Y-%M-%d %H:%m:%S"))
-receipt += "---------"
+
+receipt += "\n---------"
+receipt += "\nCHECKOUT AT: " + str(now.strftime("%Y-%M-%d %H:%m:%S"))
+receipt += "\n---------"
 for p in selected_products:
-    receipt += "SELECTED PRODUCT: " + p["name"] + "   " + to_usd(p["price"]
-receipt += "---------"
-receipt += f"SUBTOTAL: {to_usd(subtotal)}"
-receipt += f"TAX: {to_usd(subtotal * 0.0875)}"
-receipt += f"TOTAL: {to_usd(subtotal * 0.0875) + subtotal)}"
-receipt += "---------"
-receipt += "THANK YOU! PLEASE COME AGAIN SOON!"
-receipt += "---------"
+    receipt += "\nSELECTED PRODUCT: " + p["name"] + "   " + to_usd(p["price"])
+receipt += "\n---------"
+receipt += f"\nSUBTOTAL: {to_usd(subtotal)}"
+receipt += f"\nTAX: {to_usd(subtotal * 0.0875)}"
+receipt += f"\nTOTAL: {to_usd((subtotal * 0.0875) + subtotal)}"
+receipt += "\n---------"
+receipt += "\nTHANK YOU! PLEASE COME AGAIN SOON!"
+receipt += "\n---------"
+
+print(receipt)
 
 # WRITE RECEIPT TO FILE
 
 file_name = os.path.join(os.path.dirname(__file__), "..", "receipts", f"{now.strftime('%Y-%M-%d-%H-%m-%S')}.txt")
 with open(file_name, 'w') as f:
-    f.write("------------------------------------------")
-    for p in selected_products:
-        f.write("\nSELECTED PRODUCT: " + p["name"] + "   " + to_usd(p["price"]))
-
-    f.write("---------")
-    f.write(f"SUBTOTAL: {to_usd(subtotal)}")
-    f.write(f"TAX: {to_usd(subtotal * 0.1)")
-    f.write(f"TOTAL: {to_usd((subtotal * 0.1) + subtotal)")
-    f.write("---------")
-    f.write("THANK YOU! PLEASE COME AGAIN SOON!")
-    f.write("---------")
+    f.write(receipt)
 
 # TODO: SEND RECEIPT VIA EMAIL
+
+# todo: send the receipt variable
